@@ -28,7 +28,7 @@ function ProductTable(props: { category: Category, setOperation: Function }) {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     }
-    await fetch(`http://localhost:8000/api/v1/categories/${category.id}`, requestOptions)
+    await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/${category.id}`, requestOptions)
       .then(res => res.json())
       .then((res) => {
         if (res.msg !== 'Unsuccessfully operation') {

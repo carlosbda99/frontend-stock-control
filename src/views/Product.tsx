@@ -37,13 +37,13 @@ export default function Product() {
     let categories: Category[] = []
     let providers: Provider[] = []
 
-    await fetch('http://localhost:8000/api/v1/providers/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/providers/')
       .then(res => res.json())
       .then(res => {
         providers = res.providers
       })
 
-    await fetch('http://localhost:8000/api/v1/categories/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/')
       .then(res => res.json())
       .then(res => {
         categories = res.categories
@@ -131,7 +131,7 @@ export default function Product() {
         length: productLenght
       })
     }
-    await fetch('http://localhost:8000/api/v1/products/', requestOptions)
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/products/', requestOptions)
       .then(res => res.json())
       .then((res) => {
         if (res.msg !== 'Unsuccessfully operation') {

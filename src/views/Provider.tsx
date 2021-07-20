@@ -29,7 +29,7 @@ export default function Provider() {
 
   const getData = async () => {
     let data: Product[] = []
-    await fetch('http://localhost:8000/api/v1/products/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/products/')
     .then(res => res.json())
     .then(res => {
       data = res.products
@@ -77,7 +77,7 @@ export default function Provider() {
         products: providerProducts
       })
     }
-    await fetch('http://localhost:8000/api/v1/providers/', requestOptions)
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/providers/', requestOptions)
     .then(res => res.json())
     .then((res) => {
       if (res.msg !== 'Unsuccessfully operation') {
