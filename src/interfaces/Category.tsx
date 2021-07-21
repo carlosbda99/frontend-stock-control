@@ -2,7 +2,8 @@ import Product from './Product'
 
 interface Category {
   id: number
-  name: string,
+  name: string
+  description: string
   products: Product[] | []
   outStock: number
 }

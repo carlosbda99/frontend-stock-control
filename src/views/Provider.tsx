@@ -14,6 +14,8 @@ import {
 import useStyles from '../style/style';
 import Product from '../interfaces/Product';
 import AlertOperation from '../components/AlertOperation';
+import ProviderInterface from '../interfaces/Provider';
+import ItemList from '../components/ItemList';
 
 
 export default function Provider() {
@@ -23,18 +25,28 @@ export default function Provider() {
   const [providerPhone, setProviderPhone] = React.useState<string>('')
   const [providerCNPJ, setProviderCNPJ] = React.useState<string>('')
   const [products, setProducts] = React.useState<Product[] | null>(null)
-  const [operation, setOperation] = React.useState<object>({ finished: false, status: false })
-
+  const [providers, setProviders] = React.useState<ProviderInterface[] | null>(null)
+  const [operation, setOperation] = React.useState<any>({ finished: false, status: false, running: false })
+  const [errorName, setErrorName] = React.useState<boolean>(false)
+  const [errorCNPJ, setErrorCNPJ] = React.useState<boolean>(false)
 
 
   const getData = async () => {
-    let data: Product[] = []
+    let products: Product[] = []
     await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/products/')
-    .then(res => res.json())
-    .then(res => {
-      data = res.products
-    })
-    setProducts(data)
+      .then(res => res.json())
+      .then(res => {
+        products = res.products
+      })
+    setProducts(products)
+
+    let providers: ProviderInterface[] = []
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/providers/')
+      .then(res => res.json())
+      .then(res => {
+        providers = res.providers
+      })
+    setProviders(providers)
   }
 
   const handleClose = () => {
@@ -63,31 +75,43 @@ export default function Provider() {
 
   // Need improve validation
   const handleCNPJField = (event: any) => {
-    setProviderCNPJ(event.target.value)
+    if (event.target.value.length <= 18) setProviderCNPJ(event.target.value)
+  }
+
+  const validateForm = () => {
+    setErrorName(false)
+    setErrorCNPJ(false)
+    if (providerName.length < 5) setErrorName(true)
+    if (providerCNPJ.length < 5) setErrorCNPJ(true)
+    if (providerName.length < 5 || providerCNPJ.length < 5) return false
+    return true
   }
 
   const submitForm = async () => {
-    let requestOptions: object = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: providerName,
-        cnpj: providerCNPJ,
-        phone: providerPhone,
-        products: providerProducts
-      })
-    }
-    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/providers/', requestOptions)
-    .then(res => res.json())
-    .then((res) => {
-      if (res.msg !== 'Unsuccessfully operation') {
-        setOperation({finished:true, status: true})
-      } else {
-        setOperation({finished:true, status: false})
+    if (validateForm()) {
+      setOperation({ finished: false, status: false, running: true })
+      let requestOptions: object = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: providerName,
+          cnpj: providerCNPJ,
+          phone: providerPhone,
+          products: providerProducts
+        })
       }
-    })
+      await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/providers/', requestOptions)
+        .then(res => res.json())
+        .then((res) => {
+          if (res.msg !== 'Unsuccessfully operation') {
+            setOperation({ finished: true, status: true, running: false })
+          } else {
+            setOperation({ finished: true, status: false, running: false })
+          }
+        })
 
-    setDefaultValues()
+      setDefaultValues()
+    }
   }
 
   const setDefaultValues = () => {
@@ -99,9 +123,9 @@ export default function Provider() {
 
   React.useEffect(() => {
     getData()
-  }, [])
+  }, [operation])
 
-  if (!products) return <LinearProgress></LinearProgress>
+  if (!(products && providers)) return <LinearProgress></LinearProgress>
 
   return (
     <div className={classes.root}>
@@ -124,6 +148,7 @@ export default function Provider() {
                     fullWidth
                     onChange={handleNameField}
                     value={providerName}
+                    error={errorName}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -133,6 +158,7 @@ export default function Provider() {
                     fullWidth
                     onChange={handleCNPJField}
                     value={providerCNPJ}
+                    error={errorCNPJ}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={2}>
@@ -169,10 +195,14 @@ export default function Provider() {
             <Button variant="outlined" color="primary" onClick={submitForm}>
               Cadastrar
             </Button>
-            <AlertOperation handleClose={handleClose} operation={operation}/>
+            {
+              operation.running ? <LinearProgress className={classes.margin_1}></LinearProgress> :
+                <AlertOperation handleClose={handleClose} operation={operation} className={classes.margin_1} />
+            }
           </Paper>
         </Grid>
       </Grid>
+      <ItemList items={providers} title='Fornecedores cadastrados' to='providers'></ItemList>
     </div>
   );
 }

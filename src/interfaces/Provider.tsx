@@ -4,8 +4,8 @@ interface Provider{
     id: number,
     name: string,
     cnpj: string,
+    products: Product[]
     phone?: string
-    products?: Product[]
 }
 
 export default Provider

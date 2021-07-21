@@ -13,6 +13,10 @@ import {
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import DeleteIcon from '@material-ui/icons/Delete'
+import InfoRoundedIcon from '@material-ui/icons/InfoRounded'
+import { Link } from 'react-router-dom'
+import clsx from 'clsx';
+
 
 import Category from '../../../interfaces/Category';
 import useStyles from '../../../style/style';
@@ -28,13 +32,13 @@ function ProductTable(props: { category: Category, setOperation: Function }) {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     }
-    await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/${category.id}`, requestOptions)
+    await fetch(`https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/${category.id}`, requestOptions)
       .then(res => res.json())
       .then((res) => {
         if (res.msg !== 'Unsuccessfully operation') {
-          setOperation({finished:true, status: true})
+          setOperation({ finished: true, status: true })
         } else {
-          setOperation({finished:true, status: false})
+          setOperation({ finished: true, status: false })
         }
       })
   }
@@ -54,13 +58,19 @@ function ProductTable(props: { category: Category, setOperation: Function }) {
         </TableCell>
         <TableCell align="right">{category.products.length}</TableCell>
         <TableCell align="right">{category.outStock}</TableCell>
-        <TableCell>
+        <TableCell width='5%'>
           {category.products.length === 0 ?
             (<IconButton aria-label="delete" className={classes.margin_1} onClick={deleteCategory}>
               <DeleteIcon />
             </IconButton>) : null
           }
-
+        </TableCell>
+        <TableCell width='5%'>
+          <Link to={`/categories/${category.id}`} className={clsx(classes.itemLink, classes.grayedText)}>
+            <IconButton className={classes.margin_1}>
+              <InfoRoundedIcon className={classes.margin_1}></InfoRoundedIcon>
+            </IconButton>
+          </Link>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -77,26 +87,12 @@ function ProductTable(props: { category: Category, setOperation: Function }) {
                     <TableCell>Descrição</TableCell>
                     <TableCell align="right">Quantidade em estoque</TableCell>
                     <TableCell align="right">Valor (R$)</TableCell>
-                    <TableCell />
-                    <TableCell />
+                    <TableCell colSpan={2} align='center'>Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {category.products.map((product) => (
-                    // <TableRow key={product.name}>
-                    //   <TableCell component="th" scope="row">
-                    //     {product.name}
-                    //   </TableCell>
-                    //   <TableCell>{product.description}</TableCell>
-                    //   <TableCell align="right">{product.stock}</TableCell>
-                    //   <TableCell align="right">{product.value}</TableCell>
-                    //   <TableCell>
-                    //     <IconButton aria-label="delete" className={classes.margin_1}>
-                    //       <DeleteIcon />
-                    //     </IconButton>
-                    //   </TableCell>
-                    // </TableRow>
-                    <ProductRow product={product} setOperation={setOperation}></ProductRow>
+                    <ProductRow product={product} setOperation={setOperation} key={product.id}></ProductRow>
                   ))}
                 </TableBody>
               </Table>

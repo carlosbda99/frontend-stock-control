@@ -33,7 +33,7 @@ export default function Stock() {
 
   const getData = async () => {
     let data: any[] = []
-    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/')
       .then(res => res.json())
       .then(res => {
         data = res.categories
@@ -91,6 +91,7 @@ export default function Stock() {
                   <TableCell>Categoria</TableCell>
                   <TableCell align="right">Quantidade de produtos</TableCell>
                   <TableCell align="right">Quantidade de produtos faltando</TableCell>
+                  <TableCell />
                   <TableCell />
                 </TableRow>
               </TableHead>

@@ -14,24 +14,36 @@ import {
 import AlertOperation from '../components/AlertOperation';
 import useStyles from '../style/style';
 import Product from '../interfaces/Product';
+import CategoryInterface from '../interfaces/Category';
+import ItemList from '../components/ItemList';
 
 export default function Category() {
   const classes = useStyles();
   const [categoryProducts, setCategoryProducts] = React.useState<number[]>([])
   const [categoryName, setCategoryName] = React.useState<string>('')
   const [categoryDescription, setCategoryDescription] = React.useState<string>('')
-  const [operation, setOperation] = React.useState<any>({ finished: false, status: false })
+  const [operation, setOperation] = React.useState<any>({ finished: false, status: false, runnning: false })
   const [products, setProducts] = React.useState<Product[] | null>(null)
+  const [categories, setCategories] = React.useState<CategoryInterface[] | null>(null)
+  const [error, setError] = React.useState<boolean>(false)
 
 
   const getData = async () => {
-    let data: Product[] = []
-    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/products/')
-    .then(res => res.json())
-    .then(res => {
-      data = res.products
-    })
-    setProducts(data)
+    let products: Product[] = []
+    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/products/')
+      .then(res => res.json())
+      .then(res => {
+        products = res.products
+      })
+    setProducts(products)
+
+    let categories: CategoryInterface[] = []
+    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/')
+      .then(res => res.json())
+      .then(res => {
+        categories = res.categories
+      })
+    setCategories(categories)
   }
 
   const handleProductsField = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -60,38 +72,46 @@ export default function Category() {
   }
 
   const handleClose = () => {
-    setOperation({finished: false, status: false})
+    setOperation({ finished: false, status: false })
+  }
+
+  const validateForm = () => {
+    setError(false)
+    if (categoryName.length < 5) return false
+    return true
   }
 
   const submitForm = async () => {
-    let requestOptions: object = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: categoryName,
-        description: categoryDescription,
-        products: categoryProducts
-      })
-    }
-    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/', requestOptions)
-      .then(res => res.json())
-      .then((res) => {
-        if (res.msg !== 'Unsuccessfully operation') {
-          setOperation({finished:true, status: true})
-        } else {
-          setOperation({finished:true, status: false})
-        }
-      })
+    if (validateForm()) {
+      setOperation({ finished: false, status: false, running: true })
+      let requestOptions: object = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: categoryName,
+          description: categoryDescription,
+          products: categoryProducts
+        })
+      }
+      await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/', requestOptions)
+        .then(res => res.json())
+        .then((res) => {
+          if (res.msg !== 'Unsuccessfully operation') {
+            setOperation({ finished: true, status: true, running: false })
+          } else {
+            setOperation({ finished: true, status: false, running: false })
+          }
+        })
+      setDefaultValues()
+    } else { setError(true) }
 
-    setDefaultValues()
-    
   }
 
   React.useEffect(() => {
     getData()
-  },[])
+  }, [operation])
 
-  if (!products) return <LinearProgress></LinearProgress>
+  if (!(products && categories)) return <LinearProgress></LinearProgress>
 
   return (
     <div className={classes.root}>
@@ -109,6 +129,7 @@ export default function Category() {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
+                    error={error}
                     required
                     label="Nome"
                     fullWidth
@@ -151,10 +172,14 @@ export default function Category() {
             <Button variant="outlined" color="primary" onClick={submitForm}>
               Cadastrar
             </Button>
-            <AlertOperation handleClose={handleClose} operation={operation}/>
+            {
+              operation.running ? <LinearProgress className={classes.margin_1}></LinearProgress> : 
+              <AlertOperation handleClose={handleClose} operation={operation} className={classes.margin_1}/>
+            }
           </Paper>
         </Grid>
       </Grid>
+      <ItemList items={categories} title='Categorias cadastradas' to='categories'></ItemList>
     </div>
   );
 }

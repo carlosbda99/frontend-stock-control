@@ -13,7 +13,7 @@ export default function Dashboard() {
   const getData = async () => {
     let amount: number[] = []
     let labels: string[] = []
-    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/')
     .then(res => res.json())
     .then(res => {
       amount = res.categories.map((category: Category) => category.products.length)

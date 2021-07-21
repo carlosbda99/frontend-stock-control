@@ -13,6 +13,9 @@ import {
   Provider,
   Stock
 } from './views'
+import ProviderDetail from './views/ProviderDetail/ProviderDetail';
+import CategoryDetail from './views/CategoryDetail/CategoryDetail';
+import ProductDetail from './views/ProductDetail/ProductDetail';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,9 +50,12 @@ function App() {
             <Route path='/dashboard' component={Dashboard}></Route>
             <Route path='/about' component={About}></Route>
             <Route path='/stock' component={Stock}></Route>
-            <Route path='/products' component={Product}></Route>
-            <Route path='/categories' component={Category}></Route>
-            <Route path='/providers' component={Provider}></Route>
+            <Route path='/products' exact component={Product}></Route>
+            <Route path='/products/:id' component={ProductDetail}></Route>
+            <Route path='/categories' exact component={Category}></Route>
+            <Route path='/categories/:id' component={CategoryDetail}></Route>
+            <Route path='/providers' exact component={Provider}></Route>
+            <Route path='/providers/:id' component={ProviderDetail}></Route>
             <Route path='/' component={Home}></Route>
           </Switch>
         </main>

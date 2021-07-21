@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1)
     },
     itemLink: {
-      textDecoration: 'none',
+      textDecoration: 'none'
+    },
+    grayedText: {
+      color: theme.palette.text.secondary
     },
     lefted: {
       textAlign: 'start'
