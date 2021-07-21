@@ -100,7 +100,7 @@ export default function Provider() {
           products: providerProducts
         })
       }
-      await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/providers/', requestOptions)
+      await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/providers', requestOptions)
         .then(res => res.json())
         .then((res) => {
           if (res.msg !== 'Unsuccessfully operation') {
