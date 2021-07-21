@@ -26,7 +26,7 @@ function ProductDetail(props: RouteComponentProps<MatchParams>) {
 
   const getData = async () => {
     let product: Product | null = null
-    await fetch(`https://guarded-cliffs-79935.herokuapp.com//api/v1/products/${props.match.params.id}`)
+    await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/products/${props.match.params.id}`)
       .then(res => res.json())
       .then(res => {
         product = res.product

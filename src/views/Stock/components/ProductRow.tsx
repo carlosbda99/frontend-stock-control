@@ -23,7 +23,7 @@ function ProductRow(props: { product: Product, setOperation: Function }) {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' }
     }
-    await fetch(`https://guarded-cliffs-79935.herokuapp.com//api/v1/products/${product.id}`, requestOptions)
+    await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/products/${product.id}`, requestOptions)
       .then(res => res.json())
       .then((res) => {
         if (res.msg !== 'Unsuccessfully operation') {

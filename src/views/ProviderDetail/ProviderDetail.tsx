@@ -26,7 +26,7 @@ function ProviderDetail(props: RouteComponentProps<MatchParams>) {
 
     const getData = async () => {
         let provider: Provider | null = null
-        await fetch(`https://guarded-cliffs-79935.herokuapp.com//api/v1/providers/${props.match.params.id}`)
+        await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/providers/${props.match.params.id}`)
             .then(res => res.json())
             .then(res => {
                 provider = res.provider

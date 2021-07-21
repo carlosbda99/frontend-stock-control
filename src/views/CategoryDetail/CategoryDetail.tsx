@@ -26,7 +26,7 @@ function CategoryDetail(props: RouteComponentProps<MatchParams>) {
 
     const getData = async () => {
         let category: Category | null = null
-        await fetch(`https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/${props.match.params.id}`)
+        await fetch(`https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/${props.match.params.id}`)
             .then(res => res.json())
             .then(res => {
                 category = res.category

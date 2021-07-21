@@ -30,7 +30,7 @@ export default function Category() {
 
   const getData = async () => {
     let products: Product[] = []
-    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/products/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/products/')
       .then(res => res.json())
       .then(res => {
         products = res.products
@@ -38,7 +38,7 @@ export default function Category() {
     setProducts(products)
 
     let categories: CategoryInterface[] = []
-    await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/')
+    await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/')
       .then(res => res.json())
       .then(res => {
         categories = res.categories
@@ -93,7 +93,7 @@ export default function Category() {
           products: categoryProducts
         })
       }
-      await fetch('https://guarded-cliffs-79935.herokuapp.com//api/v1/categories/', requestOptions)
+      await fetch('https://guarded-cliffs-79935.herokuapp.com/api/v1/categories/', requestOptions)
         .then(res => res.json())
         .then((res) => {
           if (res.msg !== 'Unsuccessfully operation') {
